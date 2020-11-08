@@ -1,7 +1,7 @@
 <template>
   <Page @loaded="onLoaded">
     <ActionBar title="">
-      <StackLayout orientation="horizontal" >
+      <StackLayout orientation="horizontal">
         <Label
           color="white"
           :text="character ? character.name : ''"
@@ -11,8 +11,9 @@
         <Image
           v-if="character"
           :src="character ? character.image : ''"
-          height="10"
-          stretch="fill"
+          height="20"
+          width="20"
+          stretch="aspectFill"
         />
       </StackLayout>
       <!-- <NavigationButton text="Back" android.systemIcon="ic_menu_back" @tap="goBack" /> -->
