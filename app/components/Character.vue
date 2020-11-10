@@ -1,10 +1,11 @@
 <template>
   <Page @loaded="onLoaded">
-    <ActionBar title="">
+    <ActionBar title="" flat="true">
       <StackLayout orientation="horizontal">
         <Label
           color="white"
           :text="character ? character.name : ''"
+          
           textWrap="true"
           verticalAlignment="middle"
         />
@@ -16,12 +17,28 @@
           stretch="aspectFill"
         />
       </StackLayout>
-      <!-- <NavigationButton text="Back" android.systemIcon="ic_menu_back" @tap="goBack" /> -->
-      <!-- <ActionItem icon="" text="Left" ios.position="left" @tap="" />
-      <ActionItem icon="" text="Right" ios.position="right" @tap="" /> -->
+      <NavigationButton
+        text="Back"
+        android.systemIcon="ic_menu_back"
+        @tap="goBack"
+      />
+      <ActionItem
+        icon=""
+        android.systemIcon="ic_menu_home"
+        text="Home"
+        ios.position="left"
+        @tap="goHome"
+      />
     </ActionBar>
     <StackLayout>
-      <Label text="is loading..." textWrap="true" v-if="!isLoaded" />
+      <ActivityIndicator
+        :busy="!isLoaded"
+        @busyChange="onBusyChanged"
+        v-if="!isLoaded"
+        marginTop="10"
+        width="100"
+        height="100"
+      />
       <StackLayout v-else>
         <Image height="100" :src="character.image" />
         <StackLayout>
@@ -54,6 +71,7 @@
 <script>
 import axios from "axios";
 import Episode from "./Episode";
+import Home from "./Home";
 
 export default {
   props: ["character_url"],
@@ -68,6 +86,15 @@ export default {
   mounted() {},
 
   methods: {
+    goBack() {
+      this.$navigateBack();
+    },
+    goHome() {
+      this.$navigateTo(Home, {
+        // for clearing the previous routes (backstack)
+        clearHistory: true,
+      });
+    },
     onItemTap(item) {
       this.gotoEpisode(item);
     },

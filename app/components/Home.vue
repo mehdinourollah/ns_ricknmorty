@@ -1,23 +1,52 @@
 <template>
   <Page @loaded="onLoaded" backgroundSpanUnderStatusBar="true">
-    <ActionBar title="" icon="">
+    <ActionBar class="getschwifty" flat="true">
       <Label color="white" text="Rick n Morty Episodes" textWrap="true" />
-      
-      <!-- <NavigationButton text="Back" android.systemIcon="ic_menu_back" @tap="goBack" /> -->
-      <!-- <ActionItem icon="" text="Left" ios.position="left" @tap="" />
-      <ActionItem icon="" text="Right" ios.position="right" @tap="" /> -->
     </ActionBar>
-    <StackLayout>
-      <Label text="is loading..." textWrap="true" v-if="!isLoaded" />
 
-      <ListView for="(e,index) in episodes" v-else @itemTap="onItemTap">
+    <StackLayout>
+      <ActivityIndicator
+        :busy="!isLoaded"
+        @busyChange="onBusyChanged"
+        v-if="!isLoaded"
+        marginTop="10"
+        width="100"
+        height="100"
+      />
+
+      <ListView
+        for="(e,index) in episodes"
+        v-else
+        @itemTap="onItemTap"
+        separatorColor="transparent"
+      >
         <v-template>
-          <StackLayout>
-            <!-- Shows the list item label in the default color and style. -->
-            <Label :text="e.name" />
-            <Label :text="e.air_date" />
-            <Label :text="e.episode" />
-          </StackLayout>
+          <CardView class="cardStyle" margin="1" elevation="40" radius="10">
+            <StackLayout>
+              <GridLayout rows="*" columns="2*,*">
+                <Label col="1" textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="e.episode" fontWeight="bold" fontSize="20" />
+                  </FormattedString>
+                </Label>
+                <StackLayout col="0">
+                  <Label textWrap="true">
+                    <FormattedString>
+                      <Span :text="'name: '" fontWeight="bold" />
+                      <Span :text="e.name" />
+                    </FormattedString>
+                  </Label>
+
+                  <Label textWrap="true">
+                    <FormattedString>
+                      <Span :text="'air date: '" fontWeight="bold" />
+                      <Span :text="e.air_date" />
+                    </FormattedString>
+                  </Label>
+                </StackLayout>
+              </GridLayout>
+            </StackLayout>
+          </CardView>
         </v-template>
       </ListView>
     </StackLayout>
@@ -36,6 +65,7 @@ export default {
       url: "",
     };
   },
+
   mounted() {
     // this.getEpisodes();
   },
@@ -48,7 +78,7 @@ export default {
       // console.log({item})
       this.$navigateTo(Episode, {
         props: {
-          episode_url:item.item.url,
+          episode_url: item.item.url,
         },
       });
     },

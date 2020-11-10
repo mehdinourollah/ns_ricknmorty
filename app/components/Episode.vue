@@ -1,26 +1,52 @@
 <template>
   <Page @loaded="onLoaded">
-    <ActionBar title="" icon="">
-      <Label color="white" :text="episode ? episode.episode : ''" textWrap="true" />
-      
-      <!-- <NavigationButton text="Back" android.systemIcon="ic_menu_back" @tap="goBack" /> -->
-      <!-- <ActionItem icon="" text="Left" ios.position="left" @tap="" />
-      <ActionItem icon="" text="Right" ios.position="right" @tap="" /> -->
+    <ActionBar title="" icon="" flat="true">
+      <Label
+        color="white"
+        :text="episode ? episode.episode : ''"
+        textWrap="true"
+      />
+
+      <NavigationButton
+        text="Back"
+        android.systemIcon="ic_menu_back"
+        @tap="goBack"
+      />
+      <ActionItem
+        icon=""
+        android.systemIcon="ic_menu_home"
+        text="Home"
+        ios.position="left"
+        @tap="goHome"
+      />
     </ActionBar>
     <StackLayout>
-      <Label text="is loading..." textWrap="true" v-if="!isLoaded" />
-      <StackLayout v-else>
-        <Label :text="episode.name" />
-        <Label :text="episode.air_date" />
-        <Label :text="episode.episode" />
-        <ListView for="(c,index) in episode.characters" @itemTap="onItemTap" height="auto">
-          <v-template>
-            <StackLayout>
-              <Label :text="c" />
-            </StackLayout>
-          </v-template>
-        </ListView>
-      </StackLayout>
+      <ActivityIndicator
+        :busy="!isLoaded"
+        @busyChange="onBusyChanged"
+        v-if="!isLoaded"
+        marginTop="10"
+        width="100"
+        height="100"
+      />
+      <CardView v-else class="cardStyle" margin="10" elevation="40" radius="5">
+        <StackLayout>
+          <Label :text="episode.name" />
+          <Label :text="episode.air_date" />
+          <Label :text="episode.episode" />
+          <ListView
+            for="(c,index) in episode.characters"
+            @itemTap="onItemTap"
+            height="auto"
+          >
+            <v-template>
+              <StackLayout>
+                <Label :text="'hey'" />
+              </StackLayout>
+            </v-template>
+          </ListView>
+        </StackLayout>
+      </CardView>
     </StackLayout>
   </Page>
 </template>
@@ -28,6 +54,7 @@
 <script>
 import axios from "axios";
 import Character from "./Character";
+import Home from "./Home";
 
 export default {
   props: ["episode_url"],
@@ -38,11 +65,18 @@ export default {
       url: "",
     };
   },
- 
 
   methods: {
+    goBack() {
+      this.$navigateBack();
+    },
+    goHome() {
+      this.$navigateTo(Home, {
+        // for clearing the previous routes (backstack)
+        clearHistory: true,
+      });
+    },
     onItemTap(item) {
-      
       this.gotoCharacter(item.item);
     },
     gotoCharacter(url) {
