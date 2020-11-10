@@ -1,6 +1,6 @@
 <template>
   <Page @loaded="onLoaded" backgroundSpanUnderStatusBar="true">
-    <ActionBar class="getschwifty" flat="true" borderWidth="0">
+    <ActionBar class="getschwifty" flat="true" >
       <Label color="white" text="Rick n Morty Episodes" textWrap="true" />
     </ActionBar>
 
@@ -115,7 +115,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          alert("Network error!");
+          alert("Connection issue in API! Retry Again");
         });
     },
   },
@@ -123,7 +123,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/blue";
+
 
 * {
   color: black;

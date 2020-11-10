@@ -5,7 +5,6 @@
         <Label
           color="white"
           :text="character ? character.name : ''"
-          
           textWrap="true"
           verticalAlignment="middle"
         />
@@ -30,38 +29,97 @@
         @tap="goHome"
       />
     </ActionBar>
-    <StackLayout>
+    <StackLayout height="*">
       <ActivityIndicator
         :busy="!isLoaded"
         v-if="!isLoaded"
         marginTop="10"
         width="100"
         height="100"
+        color="black"
       />
-      <StackLayout v-else>
-        <Image height="100" :src="character.image" />
-        <StackLayout>
-          <Label :text="character.name" textWrap="true" />
-          <Label :text="character.status" textWrap="true" />
-          <Label :text="character.species" textWrap="true" />
-          <Label :text="character.type" textWrap="true" />
-          <Label :text="character.gender" textWrap="true" />
+      <StackLayout v-else height="*">
+        <CardView margin="1" elevation="1" radius="5" paddingLeft="20"
+          ><StackLayout paddingLeft="20" marginTop="20">
+            <GridLayout rows="*" columns="*,*" height="200">
+              <Image
+                col="1"
+                verticalAlignment="top"
+                width="100%"
+                :src="character.image"
+                stretch="aspectFit"
+                borderRadius="5"
+                margin="10"
+              />
+              <StackLayout col="0">
+                <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="'name: '" fontWeight="bold" />
+                    <Span :text="character.name" />
+                  </FormattedString>
+                </Label>
+                <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="'status: '" fontWeight="bold" />
+                    <Span :text="character.status" />
+                  </FormattedString>
+                </Label>
+                <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="'species: '" fontWeight="bold" />
+                    <Span :text="character.species" />
+                  </FormattedString>
+                </Label>
+                <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="'type: '" fontWeight="bold" />
+                    <Span :text="character.type" />
+                  </FormattedString>
+                </Label>
+                <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="'gender: '" fontWeight="bold" />
+                    <Span :text="character.gender" />
+                  </FormattedString>
+                </Label>
+                <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="'origin: '" fontWeight="bold" />
+                    <Span :text="character.origin.name" />
+                  </FormattedString>
+                </Label>
+              </StackLayout>
+            </GridLayout>
+            <Label text="episodes: " textWrap="true" margin="0" fontWeight="bold" />
+            <StackLayout class="hr" />
+            <ListView
+              for="(e,index) in episodes"
+              @itemTap="onItemTap"
+              height="*"
+            >
+              <v-template>
+                <GridLayout rows="*" columns="*,*">
+                  <Label
+                    col="1"
+                    textWrap="true"
+                    margin="0"
+                    textAlignment="right"
+                  >
+                    <FormattedString>
+                      <Span :text="e.episode" />
+                    </FormattedString>
+                  </Label>
 
-          <!-- TODO: make it clickable with link url -->
-          <Label :text="character.origin.name" textWrap="true" />
-        </StackLayout>
-
-        <ListView
-          for="(e,index) in character.episode"
-          @itemTap="onItemTap"
-          height="auto"
-        >
-          <v-template>
-            <StackLayout>
-              <Label :text="e" />
-            </StackLayout>
-          </v-template>
-        </ListView>
+                  <Label col="0" textWrap="true" margin="0">
+                    <FormattedString>
+                      <Span :text="e.name" fontWeight="bold" />
+                    </FormattedString>
+                  </Label>
+                </GridLayout>
+              </v-template>
+            </ListView>
+          </StackLayout>
+        </CardView>
       </StackLayout>
     </StackLayout>
   </Page>
@@ -116,30 +174,22 @@ export default {
         .then((res) => {
           console.log(res);
           this.character = res.data;
-          this.isLoaded = true;
-          return;
-          this.episode = res.data;
-          console.log({ res });
-          this.isLoaded = true;
-          return;
-          console.log("Pages: " + pages);
-          let requestsPromises = [];
-          for (let i = 1; i <= pages; i++) {
-            requestsPromises.push(
-              axios("https://rickandmortyapi.com/api/episode?page=" + i)
-            );
-          }
-          let episodes = [];
 
+          let episode_urls = this.character.episode;
+
+          let requestsPromises = [];
+
+          episode_urls.forEach((x) => {
+            requestsPromises.push(axios(x));
+          });
+
+          let episodes = [];
           Promise.all(requestsPromises)
             .then((results) => {
-              results
-                .map((x) => x.data.results)
-                .forEach((x) => {
-                  episodes.push(...x);
-                });
-              console.log("Finished");
+              episodes = results.map((x) => x.data);
+
               this.episodes = episodes;
+
               this.isLoaded = true;
             })
             .catch((err) => console.log(err));
@@ -155,5 +205,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/blue";
 </style>

@@ -27,7 +27,7 @@
         width="100"
         height="100"
       />
-      <CardView v-else class="cardStyle" margin="10" elevation="40" radius="5">
+      <CardView v-else margin="10" elevation="40" radius="5">
         <StackLayout paddingLeft="20" marginTop="20">
           <Label textWrap="true" margin="0">
             <FormattedString>
@@ -133,7 +133,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "~@nativescript/theme/scss/variables/blue";
+
 
 * {
   color: black;
