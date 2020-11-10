@@ -1,6 +1,6 @@
 <template>
   <Page @loaded="onLoaded">
-    <ActionBar title="" icon="" flat="true">
+    <ActionBar flat="true">
       <Label
         color="white"
         :text="episode ? episode.episode : ''"
@@ -13,9 +13,8 @@
         @tap="goBack"
       />
       <ActionItem
-        icon=""
-        android.systemIcon="ic_menu_home"
         text="Home"
+        android.systemIcon="ic_menu_home"
         ios.position="left"
         @tap="goHome"
       />
@@ -31,7 +30,12 @@
       />
       <CardView v-else class="cardStyle" margin="10" elevation="40" radius="5">
         <StackLayout>
-          <Label :text="episode.name" />
+          <Label textWrap="true" margin="0">
+                  <FormattedString>
+                    <Span :text="e.name" fontWeight="bold" fontSize="20" />
+                  </FormattedString>
+                </Label>
+          <!-- <Label :text="episode.name" /> -->
           <Label :text="episode.air_date" />
           <Label :text="episode.episode" />
           <ListView
@@ -41,7 +45,7 @@
           >
             <v-template>
               <StackLayout>
-                <Label :text="'hey'" />
+                <Label :text="c" />
               </StackLayout>
             </v-template>
           </ListView>

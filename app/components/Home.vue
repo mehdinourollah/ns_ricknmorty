@@ -1,6 +1,6 @@
 <template>
   <Page @loaded="onLoaded" backgroundSpanUnderStatusBar="true">
-    <ActionBar class="getschwifty" flat="true">
+    <ActionBar class="getschwifty" flat="true" borderWidth="0">
       <Label color="white" text="Rick n Morty Episodes" textWrap="true" />
     </ActionBar>
 
@@ -21,7 +21,7 @@
         separatorColor="transparent"
       >
         <v-template>
-          <CardView class="cardStyle" margin="1" elevation="40" radius="10">
+          <CardView class="cardStyle" margin="5" elevation="5" radius="50">
             <StackLayout>
               <GridLayout rows="*" columns="2*,*">
                 <Label col="1" textWrap="true" margin="0">
