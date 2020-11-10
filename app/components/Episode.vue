@@ -22,7 +22,6 @@
     <StackLayout>
       <ActivityIndicator
         :busy="!isLoaded"
-        @busyChange="onBusyChanged"
         v-if="!isLoaded"
         marginTop="10"
         width="100"
@@ -31,24 +30,24 @@
       <CardView v-else class="cardStyle" margin="10" elevation="40" radius="5">
         <StackLayout paddingLeft="20" marginTop="20">
           <Label textWrap="true" margin="0">
-                  <FormattedString>
-                    <Span :text="episode.name" fontWeight="bold" fontSize="20" />
-                  </FormattedString>
-                </Label>
+            <FormattedString>
+              <Span :text="episode.name" fontWeight="bold" fontSize="20" />
+            </FormattedString>
+          </Label>
           <!-- <Label :text="episode.name" /> -->
           <Label :text="episode.air_date" />
           <Label :text="episode.episode" />
           <Label text="Characters: " textWrap="true" />
-          
+
           <ListView
-            for="(c,index) in episode.characters"
+            for="(c,index) in characters"
             @itemTap="onItemTap"
             height="auto"
             marginTop="10"
           >
             <v-template>
-              <StackLayout>
-                <Label :text="c" />
+              <StackLayout height="auto">
+                <Label :text="c.name" />
               </StackLayout>
             </v-template>
           </ListView>
@@ -69,6 +68,7 @@ export default {
     return {
       isLoaded: false,
       episode: {},
+      characters: [],
       url: "",
     };
   },
@@ -102,27 +102,22 @@ export default {
       axios(this.episode_url)
         .then((res) => {
           this.episode = res.data;
-          console.log({ res });
-          this.isLoaded = true;
-          return;
-          console.log("Pages: " + pages);
-          let requestsPromises = [];
-          for (let i = 1; i <= pages; i++) {
-            requestsPromises.push(
-              axios("https://rickandmortyapi.com/api/episode?page=" + i)
-            );
-          }
-          let episodes = [];
 
+          let characters_urls = this.episode.characters;
+
+          let requestsPromises = [];
+
+          characters_urls.forEach((x) => {
+            requestsPromises.push(axios(x));
+          });
+
+          let characters = [];
           Promise.all(requestsPromises)
             .then((results) => {
-              results
-                .map((x) => x.data.results)
-                .forEach((x) => {
-                  episodes.push(...x);
-                });
-              console.log("Finished");
-              this.episodes = episodes;
+              characters = results.map((x) => x.data);
+
+              this.characters = characters;
+
               this.isLoaded = true;
             })
             .catch((err) => console.log(err));

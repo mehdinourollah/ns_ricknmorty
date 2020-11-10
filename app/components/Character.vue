@@ -33,7 +33,6 @@
     <StackLayout>
       <ActivityIndicator
         :busy="!isLoaded"
-        @busyChange="onBusyChanged"
         v-if="!isLoaded"
         marginTop="10"
         width="100"
