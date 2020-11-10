@@ -29,19 +29,22 @@
         height="100"
       />
       <CardView v-else class="cardStyle" margin="10" elevation="40" radius="5">
-        <StackLayout>
+        <StackLayout paddingLeft="20" marginTop="20">
           <Label textWrap="true" margin="0">
                   <FormattedString>
-                    <Span :text="e.name" fontWeight="bold" fontSize="20" />
+                    <Span :text="episode.name" fontWeight="bold" fontSize="20" />
                   </FormattedString>
                 </Label>
           <!-- <Label :text="episode.name" /> -->
           <Label :text="episode.air_date" />
           <Label :text="episode.episode" />
+          <Label text="Characters: " textWrap="true" />
+          
           <ListView
             for="(c,index) in episode.characters"
             @itemTap="onItemTap"
             height="auto"
+            marginTop="10"
           >
             <v-template>
               <StackLayout>
